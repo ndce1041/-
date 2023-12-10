@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stock Data Visualization</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/echarts/5.4.3/echarts.min.js"></script>
+    <style>
+        /* Additional styles if needed */
+    </style>
+
+
+    <script>
+        // Any additional JavaScript can be included here
+
+        // window.onload = function () {
+        //     var myChart = echarts.init(document.getElementById('main'));
+        //     var option = {
+        //                     xAxis: {
+        //                         data: ['2017-10-24', '2017-10-25', '2017-10-26', '2017-10-27']
+        //                     },
+        //                     yAxis: {},
+        //                     series: [
+        //                         {
+        //                         type: 'candlestick',
+        //                         data: [
+        //                             [20, 34, 10, 38],
+        //                             [40, 35, 30, 50],
+        //                             [31, 38, 33, 44],
+        //                             [38, 15, 5, 42]
+        //                         ]
+        //                         }
+        //                     ]
+        //                     };
+        //     myChart.setOption(option);
+        // };
+
+        function drawChart(date, data_) {
+            var myChart = echarts.init(document.getElementById('main'));
+            var option = {
+                            xAxis: {
+                                data: date
+                            },
+                            yAxis: {},
+                            series: [
+                                {
+                                type: 'candlestick',
+                                data: data_
+                                }
+                            ]
+                            };
+            myChart.setOption(option);
+        }
+
+        var state_of_model = ["否决", "通过", "待命"];
+        var state_of_model_color = ["bg-gray-100", "bg-green-100", "bg-red-100"];
+
+        window.onload = function(){
+                   // 为start按钮绑定事件
+            document.getElementById("start").onclick = function() {
+                // 获取股票编号
+                var stock_id = document.getElementById("stock_id").value;
+                // 获取模型选择
+                var model1 = document.getElementById("model1").checked;
+                var model2 = document.getElementById("model2").checked;
+                var model3 = document.getElementById("model3").checked;
+                var model4 = document.getElementById("model4").checked;
+                var model5 = document.getElementById("model5").checked;
+                // 发送请求
+                var xhr = new XMLHttpRequest();
+                xhr.open("POST", "/predict", true);
+                xhr.setRequestHeader("Content-Type", "application/json");
+                xhr.send(JSON.stringify({
+                    "stock_id": stock_id,
+                    "model1": model1,
+                    "model2": model2,
+                    "model3": model3,
+                    "model4": model4,
+                    "model5": model5
+                }));
+                xhr.onreadystatechange = function() {
+                    if (xhr.readyState == 4 && xhr.status == 200) {
+                        // 获取返回的数据
+                        var data = JSON.parse(xhr.responseText);
+                        
+                        // 更新模型状态
+                        document.getElementById("model1_state").innerHTML = state_of_model[data.model1];
+                        document.getElementById("model1_state").classList.add(state_of_model_color[data.model1]);
+                        document.getElementById("model2_state").innerHTML = state_of_model[data.model2];
+                        document.getElementById("model2_state").classList.add(state_of_model_color[data.model2]);
+                        document.getElementById("model3_state").innerHTML = state_of_model[data.model3];
+                        document.getElementById("model3_state").classList.add(state_of_model_color[data.model3]);
+                        document.getElementById("model4_state").innerHTML = state_of_model[data.model4];
+                        document.getElementById("model4_state").classList.add(state_of_model_color[data.model4]);
+                        document.getElementById("model5_state").innerHTML = state_of_model[data.model5];
+                        document.getElementById("model5_state").classList.add(state_of_model_color[data.model5]);
+
+                        // 更新统计结果
+                        document.getElementById("ans").innerHTML = "通过率为:" + data.ans*100 + "%";
+
+                        // 绘制图表
+                        drawChart(data.date, data.data);
+                    }
+                }
+            }
+        }
+
+ 
+
+
+
+
+
+    </script>
+
+
+</head>
+<body class="bg-gray-100">
+    <div class="container mx-auto p-4">
+        <div class="grid gap-4">
+            <!-- Stock Data Chart -->
+            <div class="bg-white shadow rounded p-4">
+                <h2 class="text-xl font-semibold mb-4">股票数据图</h2>
+                <!-- Placeholder for chart -->
+                <div class="h-64 bg-gray-200 rounded flex items-center justify-center" id="main">
+                    
+                </div>
+            </div>
+
+
+        <!-- Models Selection -->
+        <div class="bg-white shadow rounded p-4 mt-4">
+            <div class="grid grid-cols-3 gap-4">
+                <div class="col-span-2">
+                    <h3 class="text-lg font-semibold mb-2">模型选择</h3>
+                    <div class="space-y-2">
+                        <!-- Model 1 -->
+                        <div class="flex items-center">
+                            <input type="checkbox" id="model1" class="mr-2" checked>
+                            <label for="model1">模型1号</label>
+                            <div class="bg-gray-100 rounded-full px-2 py-1 ml-2 text-xs text-gray-600" id="model1_state">待命</div>
+                        </div>
+                        <!-- Model 2 -->
+                        <div class="flex items-center">
+                            <input type="checkbox" id="model2" class="mr-2" checked>
+                            <label for="model2">模型2号</label>
+                            <div class="bg-gray-100 rounded-full px-2 py-1 ml-2 text-xs text-gray-600" id="model2_state">待命</div>
+                        </div>
+                        <!-- Model 3 -->
+                        <div class="flex items-center">
+                            <input type="checkbox" id="model3" class="mr-2" checked>
+                            <label for="model3">模型3号</label>
+                            <div class="bg-gray-100 rounded-full px-2 py-1 ml-2 text-xs text-gray-600" id="model3_state">待命</div>
+                        </div>
+                        <!-- Model 4 -->
+                        <div class="flex items-center">
+                            <input type="checkbox" id="model4" class="mr-2" checked>
+                            <label for="model4">模型4号</label>
+                            <div class="bg-gray-100 rounded-full px-2 py-1 ml-2 text-xs text-gray-600" id="model4_state">待命</div>
+                        </div>
+                        <!-- Model 5 -->
+                        <div class="flex items-center">
+                            <input type="checkbox" id="model5" class="mr-2" checked>
+                            <label for="model5">模型5号</label>
+                            <div class="bg-gray-100 rounded-full px-2 py-1 ml-2 text-xs text-gray-600" id="model5_state">待命</div>
+                        </div>
+                    </div>
+                </div>
+                <div>
+                    <h3 class="text-lg font-semibold mb-2">股票编号</h3>
+                    <input type="text" placeholder="请输入股票编号" class="border border-gray-300 rounded p-2 w-full" id="stock_id">
+                            <div class="flex justify-end mt-4">
+                                <button id="start" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                                    开始预测
+                                </button>
+                            </div>
+                    <div class="">
+                        统计结果：<h1 id="ans"></h1>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- Prediction Button -->
+
+    </div>
+
+    <script>
+        // Any additional JavaScript can be included here
+    </script>
+</body>
+</html>
