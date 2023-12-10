@@ -40,7 +40,7 @@ def predict(request,key,rest):
     print(c)
     """
     {
-        "stock_id": "",
+        "stock_id": "",   # 选择的股票
         "model1":true,    # 布尔值 为true时启用该模型
         "model2":true,
         "model3":true,
@@ -51,7 +51,7 @@ def predict(request,key,rest):
     
     """
 
-    ans_dict = {"model1":1,  #为预测结果 1为买入 0为拒绝 2为未启用
+    ans_dict = {"model1":1, 
                 "model2":1,
                 "model3":1,
                 "model4":1,
@@ -59,7 +59,7 @@ def predict(request,key,rest):
 
                 "ans":"0.4", 
 
-                "date":['2017-10-24', '2017-10-25', '2017-10-26', '2017-10-27'],  # 储存预测用的股票数据的日期
+                "date":['2017-10-24', '2017-10-25', '2017-10-26', '2017-10-27'], 
                 "data":[
                         [20, 34, 10, 38],
                         [40, 35, 30, 50],
