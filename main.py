@@ -39,6 +39,21 @@ def index(request,key,rest):
     with open("./static/html/index.html","rb") as f:
         return rm.ResponseMaker().set_body(f.read())
 
+
+
+
+
+def a(data):
+    head = data.columns.tolist()
+    print(data)
+    return 1
+
+
+
+
+
+
+
 @To_json
 def predict(request,key,rest):
     c = request["json"]  # 字典对象
