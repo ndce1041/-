@@ -2,6 +2,11 @@ import xhome as xh
 import response_maker as rm
 # json
 import json
+# 数据库api
+import tushare as ts
+#ts.set_token("4dfe93632a16f49cae109f45465cc2aa13e6151e3a879cfa23d71d72")
+pro = ts.pro_api()
+import pandas as pd
 
 server = xh.Server()
 
@@ -51,6 +56,14 @@ def predict(request,key,rest):
     
     """
 
+    # 获取股票数据
+    data_pd = pro.daily(ts_code=c["stock_id"], start_date='20191001', end_date='20191031')
+
+    date_ = data_pd["trade_date"].tolist()
+    data_ = data_pd[["open","close","low","high"]].values.tolist()
+
+
+
     ans_dict = {"model1":1, 
                 "model2":1,
                 "model3":1,
@@ -81,7 +94,7 @@ def predict(request,key,rest):
         ans:"0.4"   # 为预测结果的通过率
 
         "date":["2023-12-1","2023-12-2",]  # 储存预测用的股票数据的日期
-        "data":[[1,2,3,4],                 # 储存预测用的股票数据  [start,close,low,high]
+        "data":[[1,2,3,4],                 # 储存预测用的股票数据  [open,close,low,high]
                 [1,2,3,4],
                 ]
     }
