@@ -8,6 +8,10 @@ import tushare as ts
 pro = ts.pro_api()
 import pandas as pd
 
+import model.makeSVMPrediction as svm
+import model.moving_average as movea
+import model.LSTM as lstm
+
 server = xh.Server()
 
 def To_json(func):
@@ -43,15 +47,6 @@ def index(request,key,rest):
 
 
 
-def a(data):
-    head = data.columns.tolist()
-    print(data)
-    return 1
-
-
-
-
-
 
 
 @To_json
@@ -72,28 +67,40 @@ def predict(request,key,rest):
     """
 
     # 获取股票数据
-    data_pd = pro.daily(ts_code=c["stock_id"], start_date='20191001', end_date='20191031')
-
+    data_pd = pro.daily(ts_code=c["stock_id"], start_date='20151001', end_date='20231031')
+    # 写入涨跌标记 涨为1 跌为-1  未涨跌为1  close - open取符号
+    data_pd["sign"] = data_pd["close"] - data_pd["open"]
+    data_pd["sign"] = data_pd["sign"].apply(lambda x: 1 if x >= 0 else -1 if x < 0 else 0)
     date_ = data_pd["trade_date"].tolist()
-    data_ = data_pd[["open","close","low","high"]].values.tolist()
+    data_ = data_pd[["trade_date","open","high","low","close","vol","sign"]].values.tolist()
+    
+    #print(data_pd)
+
+    # 预测
+    ans = []
+
+    ans.append(movea.model(data_pd) if c["model1"] else 2)
+    ans.append(svm.model(data_pd) if c["model2"] else 2)
+    ans.append(lstm.model(data_pd) if c["model3"] else 2)
+    ans.append(2)
+    ans.append(2)
+
+    rate = 0
+
+    ans_rate = sum([i for i in ans if i != 2]) / len([i for i in ans if i != 2])
+    
 
 
-
-    ans_dict = {"model1":1, 
-                "model2":1,
-                "model3":1,
+    ans_dict = {"model1":ans[0], 
+                "model2":ans[1],
+                "model3":ans[2],
                 "model4":1,
                 "model5":1,
 
-                "ans":"0.4", 
-
-                "date":['2017-10-24', '2017-10-25', '2017-10-26', '2017-10-27'], 
-                "data":[
-                        [20, 34, 10, 38],
-                        [40, 35, 30, 50],
-                        [31, 38, 33, 44],
-                        [38, 15, 5, 42]
-                        ]
+                # "ans":ans_rate, 
+                # 限制小数点后两位
+                "ans":round(ans_rate,2),
+                "data":data_[::-1],
                 }
 
 

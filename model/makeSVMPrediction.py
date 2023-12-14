@@ -14,9 +14,9 @@ def model(data, rate=0.8):
     df_CB['Value'] = value
     df_CB = df_CB.drop(['ts_code'],axis=1)
     # 后向填充空缺值
-    df_CB = df_CB.fillna(method='bfill')
+    df_CB = df_CB.bfill()
     df_CB = df_CB.astype('float64')
-    print(df_CB.head())
+    #print(df_CB.head())
 
     L = len(df_CB)
     train = int(L * rate)
@@ -42,13 +42,13 @@ def model(data, rate=0.8):
         classifier = svm.SVC(C=1.0, kernel='rbf')
         classifier.fit(Data_train, value_train)
         value_predict.append(classifier.predict(Data_predict))
-        print("value_real=%d value_predict=%d" % (value_real[0], value_predict[-1]))
+        #print("value_real=%d value_predict=%d" % (value_real[0], value_predict[-1]))
         # 计算测试集中的正确率
-        if (value_real[0] == int(value_predict[-1])):
+        if (value_real.iloc[0] == int(value_predict[-1])):
             correct = correct + 1
         train = train + 1
-    print(correct)
-    print(total_predict_data)
+    #print(correct)
+    #print(total_predict_data)
     correct = correct * 100 / total_predict_data
-    print("Correct=%.2f%%" % correct)
+    #print("Correct=%.2f%%" % correct)
     return value_predict[0][0]

@@ -1,5 +1,6 @@
 import pandas as pd
 
+
 def model(data, day=1):
     new_data = pd.DataFrame(index=range(0, len(data)), columns=['date', 'close'])
     for i in range(0, len(data)):  # 使用收盘价进行处理

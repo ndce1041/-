@@ -1,0 +1,124 @@
+INFO-2023-12-14 22:39:47,997 - xhome.py[line:87]:配置文件读取成功,端口:80,协议:HTTP/1.1,IP:127.0.0.1
+
+DEBUG-2023-12-14 22:39:48,863 - __init__.py[line:320]:matplotlib data path: C:\Users\xjh\AppData\Local\Programs\Python\Python311\Lib\site-packages\matplotlib\mpl-data
+
+DEBUG-2023-12-14 22:39:48,866 - __init__.py[line:320]:CONFIGDIR=C:\Users\xjh\.matplotlib
+
+DEBUG-2023-12-14 22:39:48,867 - __init__.py[line:1494]:interactive is False
+
+DEBUG-2023-12-14 22:39:48,867 - __init__.py[line:1495]:platform is win32
+
+DEBUG-2023-12-14 22:39:48,904 - __init__.py[line:320]:CACHEDIR=C:\Users\xjh\.matplotlib
+
+DEBUG-2023-12-14 22:39:48,905 - font_manager.py[line:1543]:Using fontManager instance from C:\Users\xjh\.matplotlib\fontlist-v330.json
+
+DEBUG-2023-12-14 22:39:50,076 - tpu_cluster_resolver.py[line:34]:Falling back to TensorFlow client; we recommended you install the Cloud TPU client directly with pip install cloud-tpu-client.
+
+DEBUG-2023-12-14 22:39:50,227 - __init__.py[line:47]:Creating converter from 7 to 5
+
+DEBUG-2023-12-14 22:39:50,227 - __init__.py[line:47]:Creating converter from 5 to 7
+
+DEBUG-2023-12-14 22:39:50,227 - __init__.py[line:47]:Creating converter from 7 to 5
+
+DEBUG-2023-12-14 22:39:50,227 - __init__.py[line:47]:Creating converter from 5 to 7
+
+WARNING-2023-12-14 22:39:51,693 - module_wrapper.py[line:149]:From C:\Users\xjh\AppData\Local\Programs\Python\Python311\Lib\site-packages\keras\src\losses.py:2976: The name tf.losses.sparse_softmax_cross_entropy is deprecated. Please use tf.compat.v1.losses.sparse_softmax_cross_entropy instead.
+
+
+DEBUG-2023-12-14 22:39:51,854 - xhome.py[line:91]:#初始化服务器......#
+
+INFO-2023-12-14 22:39:51,854 - xhome.py[line:115]:服务器初始化成功,端口:80,协议:HTTP/1.1,IP:127.0.0.1
+
+INFO-2023-12-14 22:39:51,854 - xhome.py[line:215]:等待事件发生...
+
+DEBUG-2023-12-14 22:39:53,143 - xhome.py[line:120]:服务器接收到新连接,IP:('127.0.0.1', 62902)
+
+INFO-2023-12-14 22:39:53,144 - xhome.py[line:215]:等待事件发生...
+
+INFO-2023-12-14 22:39:53,144 - xhome.py[line:222]:套接字响应('127.0.0.1', 62902)
+
+INFO-2023-12-14 22:39:53,144 - xhome.py[line:166]:接收数据中...
+
+INFO-2023-12-14 22:39:53,144 - xhome.py[line:179]:数据接收中断 IP:('127.0.0.1', 62902)
+
+DEBUG-2023-12-14 22:39:53,144 - xhome.py[line:208]:请求头解析成功
+
+DEBUG-2023-12-14 22:39:53,147 - connectionpool.py[line:244]:Starting new HTTP connection (1): api.tushare.pro:80
+
+DEBUG-2023-12-14 22:39:53,754 - connectionpool.py[line:546]:http://api.tushare.pro:80 "POST / HTTP/1.1" 200 None
+
+WARNING-2023-12-14 22:39:57,464 - module_wrapper.py[line:149]:From C:\Users\xjh\AppData\Local\Programs\Python\Python311\Lib\site-packages\keras\src\backend.py:873: The name tf.get_default_graph is deprecated. Please use tf.compat.v1.get_default_graph instead.
+
+
+WARNING-2023-12-14 22:39:57,823 - module_wrapper.py[line:149]:From C:\Users\xjh\AppData\Local\Programs\Python\Python311\Lib\site-packages\keras\src\optimizers\__init__.py:309: The name tf.train.Optimizer is deprecated. Please use tf.compat.v1.train.Optimizer instead.
+
+
+WARNING-2023-12-14 22:39:58,366 - module_wrapper.py[line:149]:From C:\Users\xjh\AppData\Local\Programs\Python\Python311\Lib\site-packages\keras\src\utils\tf_utils.py:492: The name tf.ragged.RaggedTensorValue is deprecated. Please use tf.compat.v1.ragged.RaggedTensorValue instead.
+
+
+DEBUG-2023-12-14 22:40:01,622 - attrs.py[line:205]:Creating converter from 5 to 3
+
+INFO-2023-12-14 22:40:05,196 - xhome.py[line:215]:等待事件发生...
+
+INFO-2023-12-14 22:40:25,201 - xhome.py[line:215]:等待事件发生...
+
+INFO-2023-12-14 22:40:45,209 - xhome.py[line:215]:等待事件发生...
+
+INFO-2023-12-14 22:41:05,211 - xhome.py[line:215]:等待事件发生...
+
+DEBUG-2023-12-14 22:41:08,045 - xhome.py[line:120]:服务器接收到新连接,IP:('127.0.0.1', 62946)
+
+INFO-2023-12-14 22:41:08,045 - xhome.py[line:215]:等待事件发生...
+
+INFO-2023-12-14 22:41:08,045 - xhome.py[line:222]:套接字响应('127.0.0.1', 62946)
+
+INFO-2023-12-14 22:41:08,045 - xhome.py[line:166]:接收数据中...
+
+INFO-2023-12-14 22:41:08,045 - xhome.py[line:179]:数据接收中断 IP:('127.0.0.1', 62946)
+
+DEBUG-2023-12-14 22:41:08,045 - xhome.py[line:208]:请求头解析成功
+
+DEBUG-2023-12-14 22:41:08,047 - connectionpool.py[line:244]:Starting new HTTP connection (1): api.tushare.pro:80
+
+DEBUG-2023-12-14 22:41:08,439 - connectionpool.py[line:546]:http://api.tushare.pro:80 "POST / HTTP/1.1" 200 None
+
+INFO-2023-12-14 22:41:29,260 - xhome.py[line:215]:等待事件发生...
+
+INFO-2023-12-14 22:41:49,265 - xhome.py[line:215]:等待事件发生...
+
+INFO-2023-12-14 22:42:09,277 - xhome.py[line:215]:等待事件发生...
+
+INFO-2023-12-14 22:42:29,277 - xhome.py[line:215]:等待事件发生...
+
+INFO-2023-12-14 22:42:49,291 - xhome.py[line:215]:等待事件发生...
+
+INFO-2023-12-14 22:43:09,300 - xhome.py[line:215]:等待事件发生...
+
+INFO-2023-12-14 22:43:29,304 - xhome.py[line:215]:等待事件发生...
+
+INFO-2023-12-14 22:43:49,312 - xhome.py[line:215]:等待事件发生...
+
+INFO-2023-12-14 22:44:09,327 - xhome.py[line:215]:等待事件发生...
+
+INFO-2023-12-14 22:44:29,330 - xhome.py[line:215]:等待事件发生...
+
+INFO-2023-12-14 22:44:49,339 - xhome.py[line:215]:等待事件发生...
+
+INFO-2023-12-14 22:45:09,342 - xhome.py[line:215]:等待事件发生...
+
+INFO-2023-12-14 22:45:29,350 - xhome.py[line:215]:等待事件发生...
+
+INFO-2023-12-14 22:45:49,362 - xhome.py[line:215]:等待事件发生...
+
+INFO-2023-12-14 22:46:09,375 - xhome.py[line:215]:等待事件发生...
+
+INFO-2023-12-14 22:46:29,385 - xhome.py[line:215]:等待事件发生...
+
+INFO-2023-12-14 22:46:49,394 - xhome.py[line:215]:等待事件发生...
+
+INFO-2023-12-14 22:47:09,398 - xhome.py[line:215]:等待事件发生...
+
+INFO-2023-12-14 22:47:29,403 - xhome.py[line:215]:等待事件发生...
+
+INFO-2023-12-14 22:47:49,417 - xhome.py[line:215]:等待事件发生...
+
