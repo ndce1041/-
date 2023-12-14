@@ -28,7 +28,7 @@ def model(data):
         #data.filename
         config['data']['filename'] = 'stoke.csv'
         #data.train_test_split
-        config['data']['train_test_split'] = 0.8 #全部用于训练,一次性预测
+        config['data']['train_test_split'] = 1 #全部用于训练,一次性预测
         #data.sequence_length
         config['data']['sequence_length'] = 50 #一次性预测
 
