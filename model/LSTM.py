@@ -101,7 +101,7 @@ def model(data):
     #只根据预测结果的第一天和预测结果的平均值,返回1(涨)或者0(跌)
     average = np.average(predictions)
     print("LSTM:预测结果的平均值(normalised)为:{}".format(average))
-    if(predictions[0]>average):
+    if(predictions[0]<average):
         print("LSTM:预测结果为:涨")
         return 1
     else:
