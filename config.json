@@ -6,7 +6,7 @@
             "Volume"
         ],
         "sequence_length": 50,
-        "train_test_split": 0.8,
+        "train_test_split": 1,
         "normalise": true
     },
     "training": {

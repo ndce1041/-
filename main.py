@@ -11,6 +11,10 @@ import pandas as pd
 import model.makeSVMPrediction as svm
 import model.moving_average as movea
 import model.LSTM as lstm
+import model.arima as arima
+import model.normal as normal
+
+import time
 
 server = xh.Server()
 
@@ -66,15 +70,20 @@ def predict(request,key,rest):
     
     """
 
+    # 获取日期date
+    date = time.strftime("%Y%m%d", time.localtime())
+    date = str(int(date) - 1)
+    print(date)
+
     # 获取股票数据
-    data_pd = pro.daily(ts_code=c["stock_id"], start_date='20151001', end_date='20231031')
+    data_pd = pro.daily(ts_code=c["stock_id"], start_date='20151001', end_date=date)
     # 写入涨跌标记 涨为1 跌为-1  未涨跌为1  close - open取符号
     data_pd["sign"] = data_pd["close"] - data_pd["open"]
     data_pd["sign"] = data_pd["sign"].apply(lambda x: 1 if x >= 0 else -1 if x < 0 else 0)
     date_ = data_pd["trade_date"].tolist()
     data_ = data_pd[["trade_date","open","high","low","close","vol","sign"]].values.tolist()
     
-    #print(data_pd)
+    print(data_pd)
 
     # 预测
     ans = []
@@ -82,10 +91,9 @@ def predict(request,key,rest):
     ans.append(movea.model(data_pd) if c["model1"] else 2)
     ans.append(svm.model(data_pd) if c["model2"] else 2)
     ans.append(lstm.model(data_pd) if c["model3"] else 2)
-    ans.append(2)
-    ans.append(2)
+    ans.append(arima.model(data_pd) if c["model4"] else 2)
+    ans.append(normal.model(data_pd) if c["model5"] else 2)
 
-    rate = 0
 
     ans_rate = sum([i for i in ans if i != 2]) / len([i for i in ans if i != 2])
     
@@ -94,8 +102,8 @@ def predict(request,key,rest):
     ans_dict = {"model1":ans[0], 
                 "model2":ans[1],
                 "model3":ans[2],
-                "model4":1,
-                "model5":1,
+                "model4":ans[3],
+                "model5":ans[4],
 
                 # "ans":ans_rate, 
                 # 限制小数点后两位
