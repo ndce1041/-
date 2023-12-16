@@ -1,7 +1,9 @@
 import pandas as pd
+import numpy as np
 
 
-def model(data, day=1):
+def model(data, dict):
+    day = dict["day"]
     new_data = pd.DataFrame(index=range(0, len(data)), columns=['date', 'close'])
     for i in range(0, len(data)):  # 使用收盘价进行处理
         new_data['date'][i] = data.index[i]
@@ -16,7 +18,15 @@ def model(data, day=1):
         a = train['close'][len(train) - day + i:].sum() + sum(preds)
         b = a / day
         preds.append(b)
+    # 计算均方误差
+    MSE = np.mean(np.power((np.array(valid['close']) - preds), 2))
+    
+    preds = []
+    for i in range(0, 20):
+        a = new_data['close'][len(new_data) - 20 + i:].sum() + sum(preds)
+        b = a / 20
+        preds.append(b)
     if preds[0] > data["close"][len(data) - 1]:
-        return 1
+        return 1, MSE, preds
     else:
-        return 0
+        return 0, MSE, preds
