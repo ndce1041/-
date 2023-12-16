@@ -17,9 +17,9 @@ def model(data, day):
         a = train['close'][len(train) - day + i:].sum() + sum(preds)
         b = a / day
         preds.append(b)
-    # 计算均方根误差
-    rms = np.sqrt(np.mean(np.power((np.array(valid['close']) - preds), 2)))
+    # 计算均方误差
+    MSE = np.mean(np.power((np.array(valid['close']) - preds), 2))
     if preds[0] > data["close"][len(data) - 1]:
-        return 1, rms
+        return 1, MSE
     else:
-        return 0, rms
+        return 0, MSE
