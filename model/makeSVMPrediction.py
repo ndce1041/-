@@ -1,7 +1,9 @@
 from sklearn import svm,preprocessing
 import pandas as pd
 
-def model(data, rate=0.8):
+def model(data, rate, core):
+    # data为DataFrame格式，rate为训练集所占比例，core为核函数
+    # core = 1,2,3分别表示'ploy','linear','rbf'三种核函数
     df_CB = data.sort_index(ascending=True, axis=0)
     df_CB = df_CB.set_index('trade_date')
     df_CB = df_CB.sort_index()
@@ -37,9 +39,12 @@ def model(data, rate=0.8):
         value_real = value[train:train + 1]
 
         # 核函数分别选取'ploy','linear','rbf'
-        # classifier = svm.SVC(C=1.0, kernel='poly')
-        # classifier = svm.SVC(kernel='linear')
-        classifier = svm.SVC(C=1.0, kernel='rbf')
+        if core == 1:
+            classifier = svm.SVC(C=1.0, kernel='poly')
+        elif core == 2:
+            classifier = svm.SVC(kernel='linear')
+        elif core == 3:
+            classifier = svm.SVC(C=1.0, kernel='rbf')
         classifier.fit(Data_train, value_train)
         value_predict.append(classifier.predict(Data_predict))
         #print("value_real=%d value_predict=%d" % (value_real[0], value_predict[-1]))
@@ -51,4 +56,4 @@ def model(data, rate=0.8):
     #print(total_predict_data)
     correct = correct * 100 / total_predict_data
     #print("Correct=%.2f%%" % correct)
-    return value_predict[0][0]
+    return value_predict[0][0], correct
