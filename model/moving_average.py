@@ -3,8 +3,8 @@ import numpy as np
 
 
 def model(data, dict):
-    rate = dict["rate"]
-    day = len(data) - int(len(data) * rate)
+    day = dict["day"]
+    # day = len(data) - int(len(data) * rate)
     new_data = pd.DataFrame(index=range(0, len(data)), columns=['date', 'close'])
     for i in range(0, len(data)):  # 使用收盘价进行处理
         new_data['date'][i] = data.index[i]
@@ -24,8 +24,8 @@ def model(data, dict):
     
     preds = []
     for i in range(0, 20):
-        a = new_data['close'][len(new_data) - 20 + i:].sum() + sum(preds)
-        b = a / 20
+        a = new_data['close'][len(new_data) - day + i:].sum() + sum(preds)
+        b = a / day
         preds.append(b)
     if preds[0] > data["close"][len(data) - 1]:
         return 1, MSE, preds
