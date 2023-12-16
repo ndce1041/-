@@ -1,6 +1,7 @@
 from sklearn import svm,preprocessing
 import pandas as pd
 import numpy as np
+from statsmodels.tsa.arima.model import ARIMA
 
 def model(data, dict):
     rate = dict["rate"]
