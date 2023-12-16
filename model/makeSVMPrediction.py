@@ -1,12 +1,16 @@
 from sklearn import svm,preprocessing
 import pandas as pd
+import numpy as np
 
-def model(data, rate, core):
+def model(data, dict):
+    rate = dict["rate"]
+    core = dict["core"]
     # data为DataFrame格式，rate为训练集所占比例，core为核函数
     # core = 1,2,3分别表示'ploy','linear','rbf'三种核函数
     df_CB = data.sort_index(ascending=True, axis=0)
     df_CB = df_CB.set_index('trade_date')
     df_CB = df_CB.sort_index()
+    df_CB = df_CB.drop(['open', 'high', 'low', 'pre_close', 'change','pct_chg', 'vol', 'amount'], axis=1)
     # value表示涨跌, =1为涨，=0为跌
     value = pd.Series(df_CB['close'] - df_CB['close'].shift(1), \
                         index=df_CB.index)
@@ -37,6 +41,7 @@ def model(data, rate, core):
         value_train = value[train - train_original:train]
         Data_predict = df_CB_X[train:train + 1]
         value_real = value[train:train + 1]
+        # print(Data_predict)
 
         # 核函数分别选取'ploy','linear','rbf'
         if core == 1:
@@ -52,8 +57,33 @@ def model(data, rate, core):
         if (value_real.iloc[0] == int(value_predict[-1])):
             correct = correct + 1
         train = train + 1
+    correct = correct * 100 / total_predict_data
+
+    value_predict = []
+    model_fit = ARIMA(df_CB_X, order=(2, 0, 2)).fit()
+    forecast = model_fit.forecast(20)
+    i = 0
+    while i < 20:
+        Data_train = df_CB_X
+        value_train = value
+        Data_predict = forecast.reshape(-1, 1)[i:i + 1]
+        # print(Data_predict)
+
+        # 核函数分别选取'ploy','linear','rbf'
+        if core == 1:
+            classifier = svm.SVC(C=1.0, kernel='poly')
+        elif core == 2:
+            classifier = svm.SVC(kernel='linear')
+        elif core == 3:
+            classifier = svm.SVC(C=1.0, kernel='rbf')
+        classifier.fit(Data_train, value_train)
+        value_predict.append(classifier.predict(Data_predict))
+        #print("value_real=%d value_predict=%d" % (value_real[0], value_predict[-1]))
+        # 计算测试集中的正确率
+        # if (value_real.iloc[0] == int(value_predict[-1])):
+        #     correct = correct + 1
+        i = i + 1
     #print(correct)
     #print(total_predict_data)
-    correct = correct * 100 / total_predict_data
     #print("Correct=%.2f%%" % correct)
     return value_predict[0][0], correct
