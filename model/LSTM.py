@@ -126,7 +126,7 @@ def model(data,input={
     print("LSTM:预测结果的平均值(normalised)为:{}".format(average))
     print("LSTM:预测结果的第一天(normalised)为:{}".format(predictions[0]))
 
-    if(predictions[0]>average):
+    if(predictions[0]<average):
         print("LSTM:预测结果为:涨")
         return 1,mse_last_seq_day,predictions.tolist()
         
