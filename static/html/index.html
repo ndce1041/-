@@ -29,6 +29,8 @@
         .highlight {
             background-color:rgb(59 130 246); /* 你可以选择你喜欢的颜色 */
         }
+
+
     </style>
 
 
@@ -182,6 +184,39 @@
             myChart.setOption(option);
         }
 
+        function drawforecast(data, element){
+            var myChart = echarts.init(element);
+            var option = {
+                xAxis: {
+                    type: 'category',
+                    //data: [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20]
+                },
+                yAxis: {
+                    type: 'value'
+                },
+                series: [
+                    {
+                    data: data,
+                    type: 'line'
+                    }
+                ]
+                };
+            myChart.setOption(option);
+        }
+
+
+        function getInputValues(id) {
+            // 获取指定id下的所有input元素 和 select元素
+            var inputs = document.getElementById(id).querySelectorAll('input');
+            var selects = document.getElementById(id).querySelectorAll('select');
+            inputs = [...inputs, ...selects]
+            var result = {};
+            for (var i = 0; i < inputs.length; i++) {
+                result[inputs[i].name] = Number(inputs[i].value);
+            }
+            return result;
+        }
+
         var state_of_model = ["否决", "通过", "待命"];
         var state_of_model_color = ["bg-red-100", "bg-green-100", "bg-gray-100"];
 
@@ -194,10 +229,20 @@
                 var stock_id = document.getElementById("stock_id").value;
                 // 获取模型选择
                 var model1 = document.getElementById("model1").checked;
+                var model1conf = getInputValues("model1conf");
+
+
                 var model2 = document.getElementById("model2").checked;
+                var model2conf = getInputValues("model2conf");
+
                 var model3 = document.getElementById("model3").checked;
+                var model3conf = getInputValues("model3conf");
+
                 var model4 = document.getElementById("model4").checked;
+                var model4conf = getInputValues("model4conf");
+
                 var model5 = document.getElementById("model5").checked;
+                var model5conf = getInputValues("model5conf");
                 // 发送请求
                 var xhr = new XMLHttpRequest();
                 xhr.open("POST", "/predict", true);
@@ -205,10 +250,15 @@
                 xhr.send(JSON.stringify({
                     "stock_id": stock_id,
                     "model1": model1,
+                    "model1conf": model1conf,
                     "model2": model2,
+                    "model2conf": model2conf,
                     "model3": model3,
+                    "model3conf": model3conf,
                     "model4": model4,
-                    "model5": model5
+                    "model4conf": model4conf,
+                    "model5": model5,
+                    "model5conf": model5conf,
                 }));
                 xhr.onreadystatechange = function() {
                     if (xhr.readyState == 4 && xhr.status == 200) {
@@ -216,16 +266,37 @@
                         var data = JSON.parse(xhr.responseText);
                         
                         // 更新模型状态
-                        document.getElementById("model1_state").innerHTML = state_of_model[data.model1];
-                        document.getElementById("model1_state").classList.add(state_of_model_color[data.model1]);
-                        document.getElementById("model2_state").innerHTML = state_of_model[data.model2];
-                        document.getElementById("model2_state").classList.add(state_of_model_color[data.model2]);
-                        document.getElementById("model3_state").innerHTML = state_of_model[data.model3];
-                        document.getElementById("model3_state").classList.add(state_of_model_color[data.model3]);
-                        document.getElementById("model4_state").innerHTML = state_of_model[data.model4];
-                        document.getElementById("model4_state").classList.add(state_of_model_color[data.model4]);
-                        document.getElementById("model5_state").innerHTML = state_of_model[data.model5];
-                        document.getElementById("model5_state").classList.add(state_of_model_color[data.model5]);
+                        if (data.model1 != 2){
+                            document.getElementById("model1_state").innerHTML = state_of_model[data.model1];
+                            document.getElementById("model1_state").classList.add(state_of_model_color[data.model1]);
+                            drawforecast(data.model1_forecast, document.getElementById("ans1"));
+                        }
+
+                        if (data.model2 != 2){
+                            document.getElementById("model2_state").innerHTML = state_of_model[data.model2];
+                            document.getElementById("model2_state").classList.add(state_of_model_color[data.model2]);
+                            drawforecast(data.model2_forecast, document.getElementById("ans2"));
+                        }
+
+                        if (data.model3 != 2){
+                            document.getElementById("model3_state").innerHTML = state_of_model[data.model3];
+                            document.getElementById("model3_state").classList.add(state_of_model_color[data.model3]);
+                            drawforecast(data.model3_forecast, document.getElementById("ans3"));
+                        }
+
+                        if (data.model4 != 2){
+                            document.getElementById("model4_state").innerHTML = state_of_model[data.model4];
+                            document.getElementById("model4_state").classList.add(state_of_model_color[data.model4]);
+                            drawforecast(data.model4_forecast, document.getElementById("ans4"));
+                        }
+
+                        if (data.model5 != 2){
+                            document.getElementById("model5_state").innerHTML = state_of_model[data.model5];
+                            document.getElementById("model5_state").classList.add(state_of_model_color[data.model5]);
+                            drawforecast(data.model5_forecast, document.getElementById("ans5"));
+                        }
+
+
 
                         // 更新统计结果
                         document.getElementById("ans").innerHTML = "通过率为:" + data.ans*100 + "%";
@@ -256,10 +327,9 @@
             <div class="bg-white shadow rounded p-4" >
                 <h2 class="text-xl font-semibold mb-4">股票数据图</h2>
                 <!-- Placeholder for chart -->
-                <div class="bg-gray-200 rounded flex items-center justify-center" style="height: 600px;" id="main">
-                    
-                </div>
+                <div class="bg-gray-200 rounded flex items-center justify-center" style="height: 600px;" id="main"></div>
             </div>
+        </div>
 
 
         <!-- Models Selection -->
@@ -313,10 +383,124 @@
                     </div>
                 </div>
 
+                
+
             </div>
         </div>
 
         <!-- Prediction Button -->
+
+
+        <div id = model1conf class="bg-white shadow rounded p-4 mt-4 flex justify-between h-96">
+            <div class="w-1/2">
+                <h3 class="text-lg font-semibold mb-2">支持向量机模型配置</h3>
+
+                <input type="text" placeholder="输入学习率" name="study_rate" value="0.8" class="border border-gray-300 rounded p-2 w-1/3">
+                <label>学习率</label>
+                <br>
+
+                <input type="text" placeholder="输入训练集占比" name="trainingsize" value="0.8" class="border border-gray-300 rounded p-2 w-1/3">
+                <label>训练集占比</label>
+                <br>
+                
+                
+            </div>
+            <div id = "ans1" class="w-1/2 bg-gray-100"></div>
+
+        </div>
+
+        <div id = model2conf class="bg-white shadow rounded p-4 mt-4 flex justify-between h-96">
+            <div class="w-1/2">
+                <h3 class="text-lg font-semibold mb-2">移动平均线模型</h3>
+
+                <input type="text" placeholder="输入学习率" name="study_rate" value="0.8" class="border border-gray-300 rounded p-2 w-1/3">
+                <label>学习率</label>                
+                <br>
+
+                <input type="text" placeholder="输入训练集占比" name="trainingsize" value="0.8" class="border border-gray-300 rounded p-2 w-1/3">
+                <label>训练集占比</label>  
+                <br>
+                
+                
+            </div>
+            <div id = "ans2" class="w-1/2 bg-gray-100"></div>
+
+        </div>
+
+        <div id = model3conf class="bg-white shadow rounded p-4 mt-4 flex justify-between h-96">
+            <div class="w-1/2">
+                <h3 class="text-lg font-semibold mb-2">长短期时间序列预测模型</h3>
+
+                <input type="text" name="seq_len" value="50" class="border border-gray-300 rounded p-2 w-1/3" title="注意:并非越大越好,控制在1-100内" pattern="\d+">
+                <label>序列长度</label>
+                <br>
+
+                <input type="text" name="nero_num" value="100" class="border border-gray-300 rounded p-2 w-1/3" title="表示模型复杂程度，与消耗时间正比，过大的数值不一定会对精度产生明显正向影响">
+                <label>LSTM神经元个数</label>
+                <br>
+
+                <input type="text" name="dropout_rate" value="0.2" class="border border-gray-300 rounded p-2 w-1/3" title="表示对信息的遗忘阈值，越大短期信息影响时间越长">
+                <label>drop out率</label>                
+                <br>
+
+                <input type="text" name="train_test_split" value="0.8" class="border border-gray-300 rounded p-2 w-1/3">
+                <label>训练集占比</label>
+                <br>
+
+
+
+            </div>
+            <div id = "ans3" class="w-1/2 bg-gray-100"></div>
+
+        </div>
+
+        <div id = model4conf class="bg-white shadow rounded p-4 mt-4 flex justify-between h-96">
+            <div class="w-1/2">
+                <h3 class="text-lg font-semibold mb-2">自我回归模型</h3>
+
+                <select type="text" name="autoregression_type" value="0.8" class="border border-gray-300 rounded p-2 w-1/3">
+                    <option value="0">使用第一项</option>
+                    <option value="1">使用第二项</option>
+                </select>
+                <label>自回归项</label>
+                <br>
+
+                <select type="text" placeholder="输入训练集占比" name="difference_type" value="0.8" class="border border-gray-300 rounded p-2 w-1/3">
+                    <option value="0">使用第一项</option>
+                    <option value="1">使用第二项</option>
+                </select>
+                <label>差分项</label>
+                <br>
+                
+                <select type="text" name="moveaverage_type" value="0.8" class="border border-gray-300 rounded p-2 w-1/3">
+                    <option value="0">使用第一项</option>
+                    <option value="1">使用第二项</option>
+                </select>
+                <label>移动平均项</label>
+                <br>
+
+                <input type="text" name="study_rate" value="0.8" class="border border-gray-300 rounded p-2 w-1/3">
+                <label>训练集占比</label>
+                <br>
+                
+            </div>
+            <div id = "ans4" class="w-1/2 bg-gray-100"></div>
+
+        </div>
+
+        <div id = model5conf class="bg-white shadow rounded p-4 mt-4 flex justify-between h-96">
+            <div class="w-1/2">
+                <h3 class="text-lg font-semibold mb-2">证券技术改良后的朴素法</h3>
+
+                <input type="text" placeholder="输入训练集占比" name="traning_rate" value="0.8" class="border border-gray-300 rounded p-2 w-1/3">
+                <label>训练集占比</label>
+                <br>
+                
+            </div>
+            <div id = "ans5" class="w-1/2 bg-gray-100"></div>
+
+        </div>
+
 
     </div>
     <div class="loader fixed items-center bottom-0" style="display: none;"></div> 

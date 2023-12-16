@@ -61,6 +61,9 @@ def predict(request,key,rest):
     {
         "stock_id": "",   # 选择的股票
         "model1":true,    # 布尔值 为true时启用该模型
+        "model1config":{
+            trainingsize:0.8, # 训练集大小
+        }
         "model2":true,
         "model3":true,
         "model4":true,
@@ -76,41 +79,63 @@ def predict(request,key,rest):
     print(date)
 
     # 获取股票数据
-    data_pd = pro.daily(ts_code=c["stock_id"], start_date='20151001', end_date=date)
+    data_pd = pro.daily(ts_code=c["stock_id"], start_date='20201001', end_date=date)
     # 写入涨跌标记 涨为1 跌为-1  未涨跌为1  close - open取符号
     data_pd["sign"] = data_pd["close"] - data_pd["open"]
     data_pd["sign"] = data_pd["sign"].apply(lambda x: 1 if x >= 0 else -1 if x < 0 else 0)
     date_ = data_pd["trade_date"].tolist()
     data_ = data_pd[["trade_date","open","high","low","close","vol","sign"]].values.tolist()
     
-    print(data_pd)
+    #print(data_pd)
 
-    # 预测
-    ans = []
+    if c["model3"]:
+        ans3,rate3,forecast3 = lstm.model(data_pd,c['model3conf'])
 
-    ans.append(movea.model(data_pd) if c["model1"] else 2)
-    ans.append(svm.model(data_pd) if c["model2"] else 2)
-    ans.append(lstm.model(data_pd) if c["model3"] else 2)
-    ans.append(arima.model(data_pd) if c["model4"] else 2)
-    ans.append(normal.model(data_pd) if c["model5"] else 2)
+    if c["model4"]:
+        ans4,rate4,forecast4 = movea.model(data_pd,c['model4conf'])
 
 
-    ans_rate = sum([i for i in ans if i != 2]) / len([i for i in ans if i != 2])
+
+    # ans.append(movea.model(data_pd) if c["model1"] else 2)
+    # ans.append(svm.model(data_pd) if c["model2"] else 2)
+    # ans.append(lstm.model(data_pd) if c["model3"] else 2)
+    # ans.append(arima.model(data_pd) if c["model4"] else 2)
+    # ans.append(normal.model(data_pd) if c["model5"] else 2)
+    
+    #模型返回参数改为 1，rate,predata
+
+
+    #ans_rate = sum([i for i in ans if i != 2]) / len([i for i in ans if i != 2])
     
 
 
-    ans_dict = {"model1":ans[0], 
-                "model2":ans[1],
-                "model3":ans[2],
-                "model4":ans[3],
-                "model5":ans[4],
+    ans_dict = {"model1":2, 
+                "model1_rate" : 0,
+                "model1_forecast" : [],
 
-                # "ans":ans_rate, 
+                "model2":2,
+                "model2_rate" : 0,
+                "model2_forecast" : [],
+
+                "model3":ans3 if c["model3"] else 0,
+                "model3_rate" : rate3 if c["model3"] else 0,
+                "model3_forecast" : forecast3 if c["model3"] else [],
+
+                "model4":ans4 if c["model4"] else 0,
+                "model4_rate" : rate4 if c["model4"] else 0,
+                "model4_forecast" : forecast4 if c["model4"] else [],
+
+                "model5":2,
+                "model5_rate" : 0,
+                "model5_forecast" : [],
+
+                "ans":0, 
                 # 限制小数点后两位
-                "ans":round(ans_rate,2),
+                # "ans":round(ans_rate,2),
                 "data":data_[::-1],
                 }
-
+    
+    #print(ans_dict)
 
 
     """
