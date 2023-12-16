@@ -81,10 +81,7 @@ def predict(request,key,rest):
     # 获取股票数据
     data_pd = pro.daily(ts_code=c["stock_id"], start_date='20201001', end_date=date)
     # 写入涨跌标记 涨为1 跌为-1  未涨跌为1  close - open取符号
-    data_pd["sign"] = data_pd["close"] - data_pd["open"]
-    data_pd["sign"] = data_pd["sign"].apply(lambda x: 1 if x >= 0 else -1 if x < 0 else 0)
-    date_ = data_pd["trade_date"].tolist()
-    data_ = data_pd[["trade_date","open","high","low","close","vol","sign"]].values.tolist()
+
     
     #print(data_pd)
     print(c)
@@ -93,6 +90,7 @@ def predict(request,key,rest):
         ans1,rate1,forecast1 = movea.model(data_pd,c['model1conf'])
 
     if c["model2"]:
+        #print(data_pd.shape)
         ans2,rate2,forecast2 = svm.model(data_pd,c['model2conf'])
 
     if c["model3"]:
@@ -117,7 +115,9 @@ def predict(request,key,rest):
 
     #ans_rate = sum([i for i in ans if i != 2]) / len([i for i in ans if i != 2])
     
-
+    data_pd["sign"] = data_pd["close"] - data_pd["open"]
+    data_pd["sign"] = data_pd["sign"].apply(lambda x: 1 if x >= 0 else -1 if x < 0 else 0)
+    data_ = data_pd[["trade_date","open","high","low","close","vol","sign"]].values.tolist()
 
     ans_dict = {"model1":ans1 if c["model1"] else 2, 
                 "model1_rate" : rate1 if c["model1"] else 0,
