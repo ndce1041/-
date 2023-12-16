@@ -3,7 +3,8 @@ import numpy as np
 
 
 def model(data, dict):
-    day = dict["day"]
+    rate = dict["rate"]
+    day = len(data) - int(len(data) * rate)
     new_data = pd.DataFrame(index=range(0, len(data)), columns=['date', 'close'])
     for i in range(0, len(data)):  # 使用收盘价进行处理
         new_data['date'][i] = data.index[i]

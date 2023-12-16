@@ -87,12 +87,22 @@ def predict(request,key,rest):
     data_ = data_pd[["trade_date","open","high","low","close","vol","sign"]].values.tolist()
     
     #print(data_pd)
+    print(c)
+
+    if c["model1"]:
+        ans1,rate1,forecast1 = movea.model(data_pd,c['model1conf'])
+
+    if c["model2"]:
+        ans2,rate2,forecast2 = svm.model(data_pd,c['model2conf'])
 
     if c["model3"]:
         ans3,rate3,forecast3 = lstm.model(data_pd,c['model3conf'])
 
     if c["model4"]:
-        ans4,rate4,forecast4 = movea.model(data_pd,c['model4conf'])
+        ans4,rate4,forecast4 = arima.model(data_pd,c['model4conf'])
+
+    if c["model5"]:
+        ans5,rate5,forecast5 = normal.model(data_pd,c['model5conf'])
 
 
 
@@ -109,25 +119,25 @@ def predict(request,key,rest):
     
 
 
-    ans_dict = {"model1":2, 
-                "model1_rate" : 0,
-                "model1_forecast" : [],
+    ans_dict = {"model1":ans1 if c["model1"] else 2, 
+                "model1_rate" : rate1 if c["model1"] else 0,
+                "model1_forecast" : forecast1 if c["model1"] else [],
 
-                "model2":2,
-                "model2_rate" : 0,
-                "model2_forecast" : [],
+                "model2":ans2 if c["model2"] else 2,
+                "model2_rate" : rate2 if c["model2"] else 0,
+                "model2_forecast" : forecast2 if c["model2"] else [],
 
-                "model3":ans3 if c["model3"] else 0,
+                "model3":ans3 if c["model3"] else 2,
                 "model3_rate" : rate3 if c["model3"] else 0,
                 "model3_forecast" : forecast3 if c["model3"] else [],
 
-                "model4":ans4 if c["model4"] else 0,
+                "model4":ans4 if c["model4"] else 2,
                 "model4_rate" : rate4 if c["model4"] else 0,
                 "model4_forecast" : forecast4 if c["model4"] else [],
 
-                "model5":2,
-                "model5_rate" : 0,
-                "model5_forecast" : [],
+                "model5":ans5 if c["model5"] else 2,
+                "model5_rate" : rate5 if c["model5"] else 0,
+                "model5_forecast" : forecast5 if c["model5"] else [],
 
                 "ans":0, 
                 # 限制小数点后两位
