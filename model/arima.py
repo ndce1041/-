@@ -44,4 +44,4 @@ def model(df,config):
     #     print(1)
     # else:
     #     print(0)
-    return int(np.mean(forecast[0])>df[-1]),error,forecast
+    return int(np.mean(forecast[0])>df[-1]),error,forecast.tolist()

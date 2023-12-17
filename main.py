@@ -79,7 +79,7 @@ def predict(request,key,rest):
     print(date)
 
     # 获取股票数据
-    data_pd = pro.daily(ts_code=c["stock_id"], start_date='20201001', end_date=date)
+    data_pd = pro.daily(ts_code=c["stock_id"], start_date='20221001', end_date=date)
     # 写入涨跌标记 涨为1 跌为-1  未涨跌为1  close - open取符号
 
     
@@ -166,6 +166,7 @@ def predict(request,key,rest):
     
     
     """
+    print(ans_dict)
     return rm.ResponseMaker().set_body(json.dumps(ans_dict).encode("utf-8")).set_head("Content-type","application/json")
 
 

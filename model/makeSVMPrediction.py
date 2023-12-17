@@ -87,4 +87,4 @@ def model(data, dict):
     #print(correct)
     #print(total_predict_data)
     #print("Correct=%.2f%%" % correct)
-    return value_predict[0][0], correct
+    return value_predict[0][0], correct, 0
